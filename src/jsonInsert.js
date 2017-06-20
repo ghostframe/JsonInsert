@@ -31,6 +31,7 @@
             var nestedCollections = getNestedCollections(document);
             if (nestedCollections.length > 0) {
                 if (!document.id) {
+                    addToSet(table.columns, "id");
                     document.id = getNextAvailableId();
                 }
                 nestedCollections

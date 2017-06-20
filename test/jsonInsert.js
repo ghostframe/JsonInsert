@@ -104,7 +104,63 @@ describe('JsonInsert', function () {
                 );
     });
     
-    it('should link out embedded collections into new table, generating an id when it not defined', function () {
+    it('should link out embedded collections into new table, generating all ids when not defined', function () {
+        var collection = [{
+                name: "George",
+                heightInCm: 2.49,
+                cars: [
+                    {
+                        model: "Mazda"
+                    },
+                    {
+                        model: "Porsche",
+                        year: 2000
+                    }
+                ]
+            },
+            {
+                name: "John",
+                heightInCm: 10,
+                cars: [
+                    {
+                        model: "Fiat"
+                    },
+                    {
+                        model: "Porsche",
+                        year: 2009
+                    }
+                ]
+            }];
+
+        var tables = jsonInsert.getTables("people", collection);
+        var idOfGeorge = tables[0].rows[0][2];
+        var idOfJohn = tables[0].rows[1][2];
+        expect(idOfGeorge).to.not.be.undefined;
+        expect(idOfJohn).to.not.be.undefined;
+        expect(tables).to.deep.equal(
+                [
+                    {
+                        name: "people",
+                        columns: ["name", "heightInCm", "id"],
+                        rows: [
+                            ["George", 2.49, idOfGeorge],
+                            ["John", 10, idOfJohn]]
+                    },
+                    {
+                        name: "cars",
+                        columns: ["model", "year", "people_id"],
+                        rows: [
+                            ["Mazda", undefined, idOfGeorge],
+                            ["Porsche", 2000, idOfGeorge],
+                            ["Fiat", undefined, idOfJohn],
+                            ["Porsche", 2009, idOfJohn]
+                        ]
+                    }
+                ]
+                );
+    });
+    
+    it('should link out embedded collections into new table, generating an unique id when not defined', function () {
         var collection = [{
                 id: 1,
                 name: "George",
@@ -136,7 +192,8 @@ describe('JsonInsert', function () {
 
         var tables = jsonInsert.getTables("people", collection);
 
-        var idOfJohn = tables[0].rows[1].id;
+        var idOfJohn = tables[0].rows[1][0];
+        expect(idOfJohn).not.to.equal(1); // Doesn't duplicate the ID
         expect(tables).to.deep.equal(
                 [
                     {
@@ -144,7 +201,7 @@ describe('JsonInsert', function () {
                         columns: ["id", "name", "heightInCm"],
                         rows: [
                             [1, "George", 2.49],
-                            [0, "John", 10]]
+                            [idOfJohn, "John", 10]]
                     },
                     {
                         name: "cars",
@@ -152,8 +209,8 @@ describe('JsonInsert', function () {
                         rows: [
                             ["Mazda", undefined, 1],
                             ["Porsche", 2000, 1],
-                            ["Fiat", undefined, 0],
-                            ["Porsche", 2009, 0]
+                            ["Fiat", undefined, idOfJohn],
+                            ["Porsche", 2009, idOfJohn]
                         ]
                     }
                 ]
