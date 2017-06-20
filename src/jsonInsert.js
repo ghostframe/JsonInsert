@@ -1,6 +1,17 @@
 (function () {
 
     var tables;
+    var usedIds = [];
+    var MAX_POSSIBLE_ID = 1000000;
+    
+    function getNextAvailableId() {
+        for(var i = 0; i < MAX_POSSIBLE_ID; i++) {
+            if (usedIds.indexOf(i) === -1) {
+                return i;
+            }
+        }
+        throw "Oh shit";
+    }
 
     function getTables(rootTableName, rootTableObject) {
         tables = [];
@@ -17,15 +28,22 @@
             setFieldToAllDocuments(documents, foreignKeyColumnName, parentObjectId);
         }
         documents.forEach(document => {
+            var nestedCollections = getNestedCollections(document);
+            if (nestedCollections.length > 0) {
+                if (!document.id) {
+                    document.id = getNextAvailableId();
+                }
+                nestedCollections
+                        .forEach((nestedCollection) => {
+                            loadObjectIntoTable(nestedCollection, document[nestedCollection], tableName, document.id);
+                        });
+            }
+            addToSet(usedIds, document.id);
             table.rows.push(
                     getRow(document, table.columns));
-            getNestedCollections(document)
-                    .forEach((nestedCollection) => {
-                        loadObjectIntoTable(nestedCollection, document[nestedCollection], tableName, document.id);
-                    });
         });
     }
-    
+
     function setFieldToAllDocuments(objects, field, value) {
         objects.forEach(object => object[field] = value);
     }
