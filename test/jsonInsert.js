@@ -2,7 +2,7 @@ var jsonInsert = require("../src/jsonInsert.js");
 var chai = require('chai');
 var expect = chai.expect;
 
-describe('JsonInsert', function () {
+describe('JsonInsert.getTables()', function () {
     it('should support an array with one shallow object', function () {
         var collection = [{
                 id: 1,
@@ -49,7 +49,7 @@ describe('JsonInsert', function () {
                 );
     });
 
-    it('should link out multiple instances of embedded collections into new table', function () {
+    it('should link out embedded collections into new table', function () {
         var collection = [{
                 id: 1,
                 name: "George",
@@ -103,7 +103,7 @@ describe('JsonInsert', function () {
                 ]
                 );
     });
-    
+
     it('should link out embedded collections into new table, generating all ids when not defined', function () {
         var collection = [{
                 name: "George",
@@ -159,8 +159,8 @@ describe('JsonInsert', function () {
                 ]
                 );
     });
-    
-    it('should link out embedded collections into new table, generating an unique id when not defined', function () {
+
+    it('should link out embedded collections into new table, generating an unique id when not defined but others are defined', function () {
         var collection = [{
                 id: 1,
                 name: "George",
@@ -193,6 +193,7 @@ describe('JsonInsert', function () {
         var tables = jsonInsert.getTables("people", collection);
 
         var idOfJohn = tables[0].rows[1][0];
+        expect(idOfJohn).not.to.be.undefined; // Doesn't duplicate the ID
         expect(idOfJohn).not.to.equal(1); // Doesn't duplicate the ID
         expect(tables).to.deep.equal(
                 [
@@ -216,5 +217,5 @@ describe('JsonInsert', function () {
                 ]
                 );
     });
-    
+
 });

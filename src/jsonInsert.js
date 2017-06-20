@@ -3,9 +3,9 @@
     var schema;
     var usedIds = [];
     var MAX_POSSIBLE_ID = 1000000;
-    
+
     function getNextAvailableId() {
-        for(var i = 0; i < MAX_POSSIBLE_ID; i++) {
+        for (var i = 0; i < MAX_POSSIBLE_ID; i++) {
             if (usedIds.indexOf(i) === -1) {
                 return i;
             }
@@ -15,45 +15,56 @@
     function getTables(collectionName, documents) {
         schema = [];
         loadObjectIntoSchemaAsTable(collectionName, documents);
-        loadObjectIntoTable(collectionName, documents);
+        loadCollectionIntoTable(collectionName, documents);
         return schema;
     }
 
-    function loadObjectIntoTable(tableName, documents, parentObjectName, parentObjectId) {
+    function loadCollectionIntoTable(tableName, documents, parentDocumentName, parentDocumentId) {
         var table = getOrCreateTable(tableName);
-        if (parentObjectName) {
-            var foreignKeyColumnName = parentObjectName + "_id";
-            addToSet(table.columns, foreignKeyColumnName);
-            setFieldToAllDocuments(documents, foreignKeyColumnName, parentObjectId);
+        var thisIsAnEmbeddedDocument = (parentDocumentName !== undefined);
+        if (thisIsAnEmbeddedDocument) {
+            var foreignKeyToParentColumnName = parentDocumentName + "_id";
+            addIfMissing(table.columns, foreignKeyToParentColumnName);
         }
         documents.forEach(document => {
+            if (parentDocumentName) {
+                document[foreignKeyToParentColumnName] = parentDocumentId;
+            }
             var nestedCollections = getNestedCollections(document);
-            if (nestedCollections.length > 0) {
-                if (!document.id) {
-                    addToSet(table.columns, "id");
-                    document.id = getNextAvailableId();
-                }
+            if (thereAre(nestedCollections)) {
+                generateIdIfMissing(document);
                 nestedCollections
                         .forEach((nestedCollection) => {
-                            loadObjectIntoTable(nestedCollection, document[nestedCollection], tableName, document.id);
+                            loadCollectionIntoTable(nestedCollection, document[nestedCollection], tableName, document.id);
                         });
             }
-            addToSet(usedIds, document.id);
             table.rows.push(
                     getRow(document, table.columns));
         });
     }
 
-    function setFieldToAllDocuments(objects, field, value) {
-        objects.forEach(object => object[field] = value);
+    function generateIdIfMissing(document) {
+        if (!document.id) {
+            document.id = getNextAvailableId();
+        }
+        addIfMissing(usedIds, document.id);
+    }
+    
+    function thereAre(array) {
+        return array.length > 0;
     }
 
     function loadObjectIntoSchemaAsTable(collectionName, documents) {
         var table = getOrCreateTable(collectionName);
         documents.forEach(document => {
             getPrimitiveFields(document)
-                    .forEach((field) => addToSet(table.columns, field));
-            getNestedCollections(document)
+                    .forEach((field) => addIfMissing(table.columns, field));
+            var nestedCollections = getNestedCollections(document);
+            if (nestedCollections.length > 0) {
+                // There are nested collections, so you need the ID to link them back
+                addIfMissing(table.columns, "id");
+            }
+            nestedCollections
                     .forEach((nestedCollection) => {
                         loadObjectIntoSchemaAsTable(nestedCollection, document[nestedCollection]);
                     });
@@ -61,7 +72,7 @@
     }
 
     function getOrCreateTable(tableName) {
-        var tableWithRequestedName = 
+        var tableWithRequestedName =
                 schema.find(table => table.name === tableName);
         if (tableWithRequestedName) {
             return tableWithRequestedName;
@@ -99,7 +110,7 @@
         return !(object instanceof Array);
     }
 
-    function addToSet(array, value) {
+    function addIfMissing(array, value) {
         if (array.indexOf(value) === -1) {
             array.push(value);
         }
