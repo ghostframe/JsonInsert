@@ -5,20 +5,29 @@
     function getTables(rootTableName, rootTableObject) {
         tables = [];
         loadTablesAndColumns(rootTableName, rootTableObject);
-        loadObjectAsTable(rootTableName, rootTableObject);
+        loadObjectIntoTable(rootTableName, rootTableObject);
         return tables;
     }
 
-    function loadObjectAsTable(collectionName, documents) {
-        var table = getOrCreateTable(collectionName);
-        documents.forEach(function (document) {
+    function loadObjectIntoTable(tableName, documents, parentObjectName, parentObjectId) {
+        var table = getOrCreateTable(tableName);
+        if (parentObjectName) {
+            var foreignKeyColumnName = parentObjectName + "_id";
+            addToSet(table.columns, foreignKeyColumnName);
+            setFieldToAllDocuments(documents, foreignKeyColumnName, parentObjectId);
+        }
+        documents.forEach(document => {
             table.rows.push(
                     getRow(document, table.columns));
             getNestedCollections(document)
                     .forEach((nestedCollection) => {
-                        loadObjectAsTable(nestedCollection, document[nestedCollection]);
+                        loadObjectIntoTable(nestedCollection, document[nestedCollection], tableName, document.id);
                     });
         });
+    }
+    
+    function setFieldToAllDocuments(objects, field, value) {
+        objects.forEach(object => object[field] = value);
     }
 
     function loadTablesAndColumns(collectionName, documents) {
@@ -27,7 +36,9 @@
             getPrimitiveFields(document)
                     .forEach((field) => addToSet(table.columns, field));
             getNestedCollections(document)
-                    .forEach((nestedCollection) => loadTablesAndColumns(nestedCollection, document[nestedCollection]));
+                    .forEach((nestedCollection) => {
+                        loadTablesAndColumns(nestedCollection, document[nestedCollection]);
+                    });
         });
     }
 
@@ -63,13 +74,6 @@
     function getPrimitiveFields(object) {
         return Object.keys(object)
                 .filter(field => isPrimitive(object[field]));
-    }
-
-    function addColumnnsOf(documents, columns) {
-        documents.forEach(document => {
-            getPrimitiveFields(document)
-                    .forEach(primitiveField => addToSet(columns, primitiveField));
-        });
     }
 
     function isPrimitive(object) {

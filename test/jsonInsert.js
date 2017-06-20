@@ -67,6 +67,7 @@ describe('JsonInsert', function () {
                 ]
             },
             {
+                id: 2,
                 name: "John",
                 heightInCm: 10
             }];
@@ -80,28 +81,28 @@ describe('JsonInsert', function () {
                         columns: ["id", "name", "heightInCm"],
                         rows: [
                             [1, "George", 2.49],
-                            [undefined, "John", 10]]
+                            [2, "John", 10]]
                     },
                     {
                         name: "cars",
-                        columns: ["model", "year"],
+                        columns: ["model", "year", "people_id"],
                         rows: [
-                            ["Mazda", 1998],
-                            ["Porsche", 2000]
+                            ["Mazda", 1998, 1],
+                            ["Porsche", 2000, 1]
                         ]
                     }
                 ]
                 );
     });
 
-    it('should link out similar embedded collections into new table', function () {
+    it('should link out multiple instances of embedded collections into new table', function () {
         var collection = [{
                 id: 1,
                 name: "George",
                 heightInCm: 2.49,
                 cars: [
                     {
-                        model: "Mazda",
+                        model: "Mazda"
                     },
                     {
                         model: "Porsche",
@@ -110,6 +111,7 @@ describe('JsonInsert', function () {
                 ]
             },
             {
+                id: 2,
                 name: "John",
                 heightInCm: 10,
                 cars: [
@@ -132,16 +134,16 @@ describe('JsonInsert', function () {
                         columns: ["id", "name", "heightInCm"],
                         rows: [
                             [1, "George", 2.49],
-                            [undefined, "John", 10]]
+                            [2, "John", 10]]
                     },
                     {
                         name: "cars",
-                        columns: ["model", "year"],
+                        columns: ["model", "year", "people_id"],
                         rows: [
-                            ["Mazda", undefined],
-                            ["Porsche", 2000],
-                            ["Fiat", undefined],
-                            ["Porsche", 2009]
+                            ["Mazda", undefined, 1],
+                            ["Porsche", 2000, 1],
+                            ["Fiat", undefined, 2],
+                            ["Porsche", 2009, 2]
                         ]
                     }
                 ]
