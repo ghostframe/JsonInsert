@@ -3,11 +3,11 @@ var chai = require('chai');
 var expect = chai.expect;
 
 describe('JsonInsert.getTables()', function () {
-    it('should support an array with one shallow object', function () {
+    it('should support a collection of one object with primitive fields', function () {
         var collection = [{
                 id: 1,
                 name: "George",
-                heightInCm: 2.49
+                height: 2.49
             }];
 
         var tables = jsonInsert.getTables("people", collection);
@@ -16,7 +16,27 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["heightInCm", "id", "name"],
+                        columns: ["height", "id", "name"],
+                        rows: [[2.49, 1, "George"]]
+                    }
+                ]
+                );
+    });
+    
+    it('should convert field names to camel case column names', function () {
+        var collection = [{
+                id: 1,
+                name: "George",
+                heightInMeters: 2.49
+            }];
+
+        var tables = jsonInsert.getTables("people", collection);
+
+        expect(tables).to.deep.equal(
+                [
+                    {
+                        name: "people",
+                        columns: ["height_in_meters", "id", "name"],
                         rows: [[2.49, 1, "George"]]
                     }
                 ]
@@ -27,11 +47,11 @@ describe('JsonInsert.getTables()', function () {
         var collection = [{
                 id: 1,
                 name: "George",
-                heightInCm: 2.49
+                height: 2.49
             },
             {
                 name: "John",
-                heightInCm: 10
+                height: 10
             }];
 
         var tables = jsonInsert.getTables("people", collection);
@@ -40,7 +60,7 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["heightInCm", "id", "name"],
+                        columns: ["height", "id", "name"],
                         rows: [
                             [2.49, 1, "George"],
                             [10, undefined, "John"]]
@@ -53,7 +73,7 @@ describe('JsonInsert.getTables()', function () {
         var collection = [{
                 id: 1,
                 name: "George",
-                heightInCm: 2.49,
+                height: 2.49,
                 cars: [
                     {
                         model: "Mazda"
@@ -67,7 +87,7 @@ describe('JsonInsert.getTables()', function () {
             {
                 id: 2,
                 name: "John",
-                heightInCm: 10,
+                height: 10,
                 cars: [
                     {
                         model: "Fiat"
@@ -85,7 +105,7 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["heightInCm", "id", "name"],
+                        columns: ["height", "id", "name"],
                         rows: [
                             [2.49, 1, "George"],
                             [10, 2, "John"]]
@@ -107,7 +127,7 @@ describe('JsonInsert.getTables()', function () {
     it('should link out embedded collections into new table, generating all ids when not defined', function () {
         var collection = [{
                 name: "George",
-                heightInCm: 2.49,
+                height: 2.49,
                 cars: [
                     {
                         model: "Mazda"
@@ -120,7 +140,7 @@ describe('JsonInsert.getTables()', function () {
             },
             {
                 name: "John",
-                heightInCm: 10,
+                height: 10,
                 cars: [
                     {
                         model: "Fiat"
@@ -141,7 +161,7 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["heightInCm", "id", "name"],
+                        columns: ["height", "id", "name"],
                         rows: [
                             [2.49, idOfGeorge, "George"],
                             [10, idOfJohn, "John"]]
@@ -164,7 +184,7 @@ describe('JsonInsert.getTables()', function () {
         var collection = [{
                 id: 1,
                 name: "George",
-                heightInCm: 2.49,
+                height: 2.49,
                 cars: [
                     {
                         model: "Mazda"
@@ -178,7 +198,7 @@ describe('JsonInsert.getTables()', function () {
             {
                 id: undefined,
                 name: "John",
-                heightInCm: 10,
+                height: 10,
                 cars: [
                     {
                         model: "Fiat"
@@ -199,7 +219,7 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["heightInCm", "id", "name"],
+                        columns: ["height", "id", "name"],
                         rows: [
                             [2.49, 1, "George"],
                             [10, idOfJohn, "John"]]

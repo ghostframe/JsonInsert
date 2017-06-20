@@ -1,3 +1,5 @@
+var lodash = require("lodash");
+
 (function () {
 
     var schema;
@@ -21,7 +23,14 @@
         addForeignKeysToNestedCollectionsOfEachDocumentIn(collection);
         loadCollectionColumnsRecursive(collection);
         loadRows(collection);
+        convertAllColumnNamesToSnakeCase();
         return schema;
+    }
+
+    function convertAllColumnNamesToSnakeCase() {
+        schema.forEach(table => {
+            table.columns = table.columns.map(lodash.snakeCase);
+        });
     }
 
     function addForeignKeysToNestedCollectionsOfEachDocumentIn(collection) {
