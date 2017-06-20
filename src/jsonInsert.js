@@ -2,10 +2,10 @@
 
     var schema;
     var usedIds = [];
-    var MAX_POSSIBLE_ID = 1000000;
+    var MAX_GENERATED_ID = 1000000;
 
     function getNextAvailableId() {
-        for (var i = 0; i < MAX_POSSIBLE_ID; i++) {
+        for (var i = 0; i < MAX_GENERATED_ID; i++) {
             if (usedIds.indexOf(i) === -1) {
                 return i;
             }
@@ -14,59 +14,70 @@
 
     function getTables(collectionName, documents) {
         schema = [];
-        loadObjectIntoSchemaAsTable(collectionName, documents);
-        loadCollectionIntoTable(collectionName, documents);
+        var collection = {
+            name: collectionName,
+            documents: documents
+        };
+        addForeignKeysToNestedCollectionsOfEachDocumentIn(collection);
+        loadCollectionColumnsRecursive(collection);
+        loadRows(collection);
         return schema;
     }
 
-    function loadCollectionIntoTable(tableName, documents, parentDocumentName, parentDocumentId) {
-        var table = getOrCreateTable(tableName);
-        var thisIsAnEmbeddedDocument = (parentDocumentName !== undefined);
-        if (thisIsAnEmbeddedDocument) {
-            var foreignKeyToParentColumnName = parentDocumentName + "_id";
-            addIfMissing(table.columns, foreignKeyToParentColumnName);
-        }
-        documents.forEach(document => {
-            if (parentDocumentName) {
-                document[foreignKeyToParentColumnName] = parentDocumentId;
-            }
-            var nestedCollections = getNestedCollections(document);
-            if (thereAre(nestedCollections)) {
-                generateIdIfMissing(document);
-                nestedCollections
-                        .forEach((nestedCollection) => {
-                            loadCollectionIntoTable(nestedCollection, document[nestedCollection], tableName, document.id);
+    function addForeignKeysToNestedCollectionsOfEachDocumentIn(collection) {
+        collection.documents.forEach(
+                document => {
+                    var nestedCollectionsInDocument = nestedCollectionsIn(document);
+                    if (thereAre(nestedCollectionsInDocument)) {
+                        processOrSetId(document);
+                        nestedCollectionsInDocument.forEach(nestedCollection => {
+                            nestedCollection.documents.forEach(nestedDocument =>
+                                setForeignKey(nestedDocument, collection.name, document.id)
+                            );
+                            addForeignKeysToNestedCollectionsOfEachDocumentIn(nestedCollection);
                         });
-            }
+                    }
+                }
+        );
+    }
+
+    function setForeignKey(document, referencedCollection, referencedDocumentId) {
+        document[generateForeignKeyIdFieldName(referencedCollection)] = referencedDocumentId;
+    }
+
+    function generateForeignKeyIdFieldName(nameOfCollectionToReferTo) {
+        return nameOfCollectionToReferTo + "_id";
+    }
+
+    function loadRows(collection) {
+        var table = getOrCreateTable(collection.name);
+        collection.documents.forEach(document => {
+            nestedCollectionsIn(document).forEach(loadRows);
             table.rows.push(
                     getRow(document, table.columns));
         });
     }
 
-    function generateIdIfMissing(document) {
+    function processOrSetId(document) {
         if (!document.id) {
             document.id = getNextAvailableId();
         }
         addIfMissing(usedIds, document.id);
     }
-    
+
     function thereAre(array) {
         return array.length > 0;
     }
 
-    function loadObjectIntoSchemaAsTable(collectionName, documents) {
-        var table = getOrCreateTable(collectionName);
-        documents.forEach(document => {
+    function loadCollectionColumnsRecursive(collection) {
+        var table = getOrCreateTable(collection.name);
+        collection.documents.forEach(document => {
             getPrimitiveFields(document)
                     .forEach((field) => addIfMissing(table.columns, field));
-            var nestedCollections = getNestedCollections(document);
-            if (nestedCollections.length > 0) {
-                // There are nested collections, so you need the ID to link them back
-                addIfMissing(table.columns, "id");
-            }
-            nestedCollections
+            table.columns.sort();
+            nestedCollectionsIn(document)
                     .forEach((nestedCollection) => {
-                        loadObjectIntoSchemaAsTable(nestedCollection, document[nestedCollection]);
+                        loadCollectionColumnsRecursive(nestedCollection);
                     });
         });
     }
@@ -96,9 +107,15 @@
                 .map(column => object[column]);
     }
 
-    function getNestedCollections(object) {
+    function nestedCollectionsIn(object) {
         return Object.keys(object)
-                .filter(field => !isPrimitive(object[field]));
+                .filter(field => !isPrimitive(object[field]))
+                .map(nestedCollectionField => {
+                    return {
+                        name: nestedCollectionField,
+                        documents: object[nestedCollectionField]
+                    };
+                });
     }
 
     function getPrimitiveFields(object) {

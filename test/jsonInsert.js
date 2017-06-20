@@ -16,8 +16,8 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["id", "name", "heightInCm"],
-                        rows: [[1, "George", 2.49]]
+                        columns: ["heightInCm", "id", "name"],
+                        rows: [[2.49, 1, "George"]]
                     }
                 ]
                 );
@@ -40,10 +40,10 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["id", "name", "heightInCm"],
+                        columns: ["heightInCm", "id", "name"],
                         rows: [
-                            [1, "George", 2.49],
-                            [undefined, "John", 10]]
+                            [2.49, 1, "George"],
+                            [10, undefined, "John"]]
                     }
                 ]
                 );
@@ -85,19 +85,19 @@ describe('JsonInsert.getTables()', function () {
                 [
                     {
                         name: "people",
-                        columns: ["id", "name", "heightInCm"],
+                        columns: ["heightInCm", "id", "name"],
                         rows: [
-                            [1, "George", 2.49],
-                            [2, "John", 10]]
+                            [2.49, 1, "George"],
+                            [10, 2, "John"]]
                     },
                     {
                         name: "cars",
-                        columns: ["model", "year", "people_id"],
+                        columns: ["model", "people_id", "year"],
                         rows: [
-                            ["Mazda", undefined, 1],
-                            ["Porsche", 2000, 1],
-                            ["Fiat", undefined, 2],
-                            ["Porsche", 2009, 2]
+                            ["Mazda", 1, undefined],
+                            ["Porsche", 1, 2000],
+                            ["Fiat", 2, undefined],
+                            ["Porsche", 2, 2009]
                         ]
                     }
                 ]
@@ -133,27 +133,27 @@ describe('JsonInsert.getTables()', function () {
             }];
 
         var tables = jsonInsert.getTables("people", collection);
-        var idOfGeorge = tables[0].rows[0][2];
-        var idOfJohn = tables[0].rows[1][2];
+        var idOfGeorge = tables[0].rows[0][1];
+        var idOfJohn = tables[0].rows[1][1];
         expect(idOfGeorge).to.not.be.undefined;
         expect(idOfJohn).to.not.be.undefined;
         expect(tables).to.deep.equal(
                 [
                     {
                         name: "people",
-                        columns: ["name", "heightInCm", "id"],
+                        columns: ["heightInCm", "id", "name"],
                         rows: [
-                            ["George", 2.49, idOfGeorge],
-                            ["John", 10, idOfJohn]]
+                            [2.49, idOfGeorge, "George"],
+                            [10, idOfJohn, "John"]]
                     },
                     {
                         name: "cars",
-                        columns: ["model", "year", "people_id"],
+                        columns: ["model", "people_id", "year"],
                         rows: [
-                            ["Mazda", undefined, idOfGeorge],
-                            ["Porsche", 2000, idOfGeorge],
-                            ["Fiat", undefined, idOfJohn],
-                            ["Porsche", 2009, idOfJohn]
+                            ["Mazda", idOfGeorge, undefined],
+                            ["Porsche", idOfGeorge, 2000],
+                            ["Fiat", idOfJohn, undefined],
+                            ["Porsche", idOfJohn, 2009]
                         ]
                     }
                 ]
@@ -192,26 +192,26 @@ describe('JsonInsert.getTables()', function () {
 
         var tables = jsonInsert.getTables("people", collection);
 
-        var idOfJohn = tables[0].rows[1][0];
+        var idOfJohn = tables[0].rows[1][1];
         expect(idOfJohn).not.to.be.undefined; // Doesn't duplicate the ID
         expect(idOfJohn).not.to.equal(1); // Doesn't duplicate the ID
         expect(tables).to.deep.equal(
                 [
                     {
                         name: "people",
-                        columns: ["id", "name", "heightInCm"],
+                        columns: ["heightInCm", "id", "name"],
                         rows: [
-                            [1, "George", 2.49],
-                            [idOfJohn, "John", 10]]
+                            [2.49, 1, "George"],
+                            [10, idOfJohn, "John"]]
                     },
                     {
                         name: "cars",
-                        columns: ["model", "year", "people_id"],
+                        columns: ["model", "people_id", "year"],
                         rows: [
-                            ["Mazda", undefined, 1],
-                            ["Porsche", 2000, 1],
-                            ["Fiat", undefined, idOfJohn],
-                            ["Porsche", 2009, idOfJohn]
+                            ["Mazda", 1, undefined],
+                            ["Porsche", 1, 2000],
+                            ["Fiat", idOfJohn, undefined],
+                            ["Porsche", idOfJohn, 2009]
                         ]
                     }
                 ]
