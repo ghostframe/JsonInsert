@@ -1,5 +1,3 @@
-var lodash = require("lodash");
-
 (function () {
 
     var schema;
@@ -14,7 +12,7 @@ var lodash = require("lodash");
         }
     }
 
-    function getTables(collectionName, documents) {
+    function getSchema(collectionName, documents) {
         schema = [];
         var collection = {
             name: collectionName,
@@ -23,14 +21,7 @@ var lodash = require("lodash");
         addForeignKeysToNestedCollectionsOfEachDocumentIn(collection);
         loadCollectionColumnsRecursive(collection);
         loadRows(collection);
-        convertAllColumnNamesToSnakeCase();
         return schema;
-    }
-
-    function convertAllColumnNamesToSnakeCase() {
-        schema.forEach(table => {
-            table.columns = table.columns.map(lodash.snakeCase);
-        });
     }
 
     function addForeignKeysToNestedCollectionsOfEachDocumentIn(collection) {
@@ -143,7 +134,7 @@ var lodash = require("lodash");
     }
 
     module.exports = {
-        getTables: getTables
+        getSchema: getSchema
     };
 
 })();

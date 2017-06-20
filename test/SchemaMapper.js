@@ -1,8 +1,8 @@
-var jsonInsert = require("../src/jsonInsert.js");
+var SchemaMapper = require("../src/SchemaMapper.js");
 var chai = require('chai');
 var expect = chai.expect;
 
-describe('JsonInsert.getTables()', function () {
+describe('SchemaMapper.getSchema(collectionName, documents)', function () {
     it('should support a collection of one object with primitive fields', function () {
         var collection = [{
                 id: 1,
@@ -10,7 +10,7 @@ describe('JsonInsert.getTables()', function () {
                 height: 2.49
             }];
 
-        var tables = jsonInsert.getTables("people", collection);
+        var tables = SchemaMapper.getSchema("people", collection);
 
         expect(tables).to.deep.equal(
                 [
@@ -23,26 +23,6 @@ describe('JsonInsert.getTables()', function () {
                 );
     });
     
-    it('should convert field names to camel case column names', function () {
-        var collection = [{
-                id: 1,
-                name: "George",
-                heightInMeters: 2.49
-            }];
-
-        var tables = jsonInsert.getTables("people", collection);
-
-        expect(tables).to.deep.equal(
-                [
-                    {
-                        name: "people",
-                        columns: ["height_in_meters", "id", "name"],
-                        rows: [[2.49, 1, "George"]]
-                    }
-                ]
-                );
-    });
-
     it('should complete objects with missing fields', function () {
         var collection = [{
                 id: 1,
@@ -54,7 +34,7 @@ describe('JsonInsert.getTables()', function () {
                 height: 10
             }];
 
-        var tables = jsonInsert.getTables("people", collection);
+        var tables = SchemaMapper.getSchema("people", collection);
 
         expect(tables).to.deep.equal(
                 [
@@ -99,7 +79,7 @@ describe('JsonInsert.getTables()', function () {
                 ]
             }];
 
-        var tables = jsonInsert.getTables("people", collection);
+        var tables = SchemaMapper.getSchema("people", collection);
 
         expect(tables).to.deep.equal(
                 [
@@ -152,7 +132,7 @@ describe('JsonInsert.getTables()', function () {
                 ]
             }];
 
-        var tables = jsonInsert.getTables("people", collection);
+        var tables = SchemaMapper.getSchema("people", collection);
         var idOfGeorge = tables[0].rows[0][1];
         var idOfJohn = tables[0].rows[1][1];
         expect(idOfGeorge).to.not.be.undefined;
@@ -210,7 +190,7 @@ describe('JsonInsert.getTables()', function () {
                 ]
             }];
 
-        var tables = jsonInsert.getTables("people", collection);
+        var tables = SchemaMapper.getSchema("people", collection);
 
         var idOfJohn = tables[0].rows[1][1];
         expect(idOfJohn).not.to.be.undefined; // Doesn't duplicate the ID
