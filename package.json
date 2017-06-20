@@ -1,0 +1,11 @@
+{
+    "name": "JsonToInsert",
+    "version": "1.0.0",
+    "author": "pravus",
+    "dependencies": {
+        "chai": "^4.0.2",
+        "grunt": "latest",
+        "grunt-mocha-test": "latest",
+        "mocha": "latest"
+    }
+}
