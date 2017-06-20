@@ -1,6 +1,6 @@
 (function () {
 
-    var tables;
+    var schema;
     var usedIds = [];
     var MAX_POSSIBLE_ID = 1000000;
     
@@ -10,14 +10,13 @@
                 return i;
             }
         }
-        throw "Oh shit";
     }
 
-    function getTables(rootTableName, rootTableObject) {
-        tables = [];
-        loadTablesAndColumns(rootTableName, rootTableObject);
-        loadObjectIntoTable(rootTableName, rootTableObject);
-        return tables;
+    function getTables(collectionName, documents) {
+        schema = [];
+        loadObjectIntoSchemaAsTable(collectionName, documents);
+        loadObjectIntoTable(collectionName, documents);
+        return schema;
     }
 
     function loadObjectIntoTable(tableName, documents, parentObjectName, parentObjectId) {
@@ -49,34 +48,35 @@
         objects.forEach(object => object[field] = value);
     }
 
-    function loadTablesAndColumns(collectionName, documents) {
+    function loadObjectIntoSchemaAsTable(collectionName, documents) {
         var table = getOrCreateTable(collectionName);
         documents.forEach(document => {
             getPrimitiveFields(document)
                     .forEach((field) => addToSet(table.columns, field));
             getNestedCollections(document)
                     .forEach((nestedCollection) => {
-                        loadTablesAndColumns(nestedCollection, document[nestedCollection]);
+                        loadObjectIntoSchemaAsTable(nestedCollection, document[nestedCollection]);
                     });
         });
     }
 
     function getOrCreateTable(tableName) {
-        var tableWithRequestedName = tables.find(table => table.name === tableName);
+        var tableWithRequestedName = 
+                schema.find(table => table.name === tableName);
         if (tableWithRequestedName) {
             return tableWithRequestedName;
         } else {
-            return addTable(tableName);
+            return createTable(tableName);
         }
     }
 
-    function addTable(tableName) {
+    function createTable(tableName) {
         var newTable = {
             name: tableName,
             columns: [],
             rows: []
         };
-        tables.push(newTable);
+        schema.push(newTable);
         return newTable;
     }
 

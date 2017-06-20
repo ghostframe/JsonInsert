@@ -5,7 +5,9 @@
     "dependencies": {
         "chai": "^4.0.2",
         "grunt": "latest",
-        "grunt-mocha-test": "latest",
+        "grunt-mocha-istanbul": "^5.0.2",
+        "grunt-mocha-test": "^0.13.2",
+        "istanbul": "^0.4.5",
         "mocha": "latest"
     }
 }
