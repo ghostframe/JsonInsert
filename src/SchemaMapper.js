@@ -1,6 +1,6 @@
 (function () {
 
-    var schema;
+    var schema = [];
     var usedIds = [];
     var MAX_GENERATED_ID = 1000000;
 
@@ -12,12 +12,22 @@
         }
     }
 
-    function getSchema(collectionName, documents) {
-        schema = [];
-        var collection = {
-            name: collectionName,
-            documents: documents
-        };
+    function getSchemaForMetaCollection(metaCollection) {
+        Object.keys(metaCollection)
+                .map(collectionName =>
+                {
+                    console.log(collectionName);
+                    return {
+                        name: collectionName,
+                        documents: metaCollection[collectionName]
+                    };
+                    
+                })
+                .forEach(getSchemaForCollection);
+        return schema;
+    }
+
+    function getSchemaForCollection(collection) {
         addForeignKeysToNestedCollectionsOfEachDocumentIn(collection);
         loadCollectionColumnsRecursive(collection);
         loadRows(collection);
@@ -132,9 +142,15 @@
             array.push(value);
         }
     }
+    
+    function clearSchema() {
+        schema = [];
+    }
 
     module.exports = {
-        getSchema: getSchema
+        clearSchema: clearSchema,
+        getSchemaForCollection: getSchemaForCollection,
+        getSchemaForMetaCollection: getSchemaForMetaCollection
     };
 
 })();
