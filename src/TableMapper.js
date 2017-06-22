@@ -12,7 +12,7 @@
         }
     }
 
-    function getSchemaForCollection(collection) {
+    function getTablesFromCollection(collection) {
         schema = [];
         addForeignKeysToNestedCollectionsOfEachDocumentIn(collection);
         loadCollectionColumnsRecursive(collection);
@@ -130,7 +130,7 @@
     }
     
     module.exports = {
-        getSchemaForCollection: getSchemaForCollection
+        getTablesFromCollection: getTablesFromCollection
     };
 
 })();

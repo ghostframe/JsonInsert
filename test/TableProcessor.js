@@ -1,8 +1,8 @@
-var SchemaProcessor = require("../src/SchemaProcessor.js");
+var TableProcessor = require("../src/TableProcessor.js");
 var chai = require('chai');
 var expect = chai.expect;
 
-describe("InsertWriter", function () {
+describe("TableProcessor", function () {
     describe("snakeCaseifyColumns()", function () {
         it("snake-cases all columns", function () {
             var schema = [
@@ -14,7 +14,7 @@ describe("InsertWriter", function () {
                 }
             ];
 
-            SchemaProcessor.snakeCaseifyColumns(schema);
+            TableProcessor.snakeCaseifyColumns(schema);
             expect(schema).to.deep.equal(
                     [
                         {
