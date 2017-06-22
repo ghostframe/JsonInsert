@@ -12,22 +12,8 @@
         }
     }
 
-    function getSchemaForMetaCollection(metaCollection) {
-        Object.keys(metaCollection)
-                .map(collectionName =>
-                {
-                    console.log(collectionName);
-                    return {
-                        name: collectionName,
-                        documents: metaCollection[collectionName]
-                    };
-                    
-                })
-                .forEach(getSchemaForCollection);
-        return schema;
-    }
-
     function getSchemaForCollection(collection) {
+        schema = [];
         addForeignKeysToNestedCollectionsOfEachDocumentIn(collection);
         loadCollectionColumnsRecursive(collection);
         loadRows(collection);
@@ -143,14 +129,8 @@
         }
     }
     
-    function clearSchema() {
-        schema = [];
-    }
-
     module.exports = {
-        clearSchema: clearSchema,
-        getSchemaForCollection: getSchemaForCollection,
-        getSchemaForMetaCollection: getSchemaForMetaCollection
+        getSchemaForCollection: getSchemaForCollection
     };
 
 })();
