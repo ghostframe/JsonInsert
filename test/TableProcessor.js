@@ -5,7 +5,7 @@ var expect = chai.expect;
 describe("TableProcessor", function () {
     describe("snakeCaseifyColumns()", function () {
         it("snake-cases all columns", function () {
-            var schema = [
+            var tables = [
                 {
                     columns: ["id", "name", "heightInMeters"]
                 },
@@ -14,8 +14,8 @@ describe("TableProcessor", function () {
                 }
             ];
 
-            TableProcessor.snakeCaseifyColumns(schema);
-            expect(schema).to.deep.equal(
+            TableProcessor.snakeCaseifyColumns(tables);
+            expect(tables).to.deep.equal(
                     [
                         {
                             columns: ["id", "name", "height_in_meters"]

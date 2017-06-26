@@ -2,8 +2,8 @@ var lodash = require("lodash");
 
 (function () {
 
-    function snakeCaseifyColumns(schema) {
-        schema.forEach(table =>
+    function snakeCaseifyColumns(tables) {
+        tables.forEach(table =>
             table.columns = table.columns.map(lodash.snakeCase)
         );
     }

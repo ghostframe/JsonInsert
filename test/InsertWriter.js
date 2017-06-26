@@ -2,9 +2,9 @@ var InsertWriter = require("../src/InsertWriter.js");
 var chai = require('chai');
 var expect = chai.expect;
 
-describe("InsertWriter.writeSchemaInserts(schema)", function () {
-    it("writes schema with one table and one row correctly", function () {
-        var schema = [
+describe("InsertWriter.writeTableInserts(tables)", function () {
+    it("writes tables with one table and one row correctly", function () {
+        var tables = [
             {
                 name: "people",
                 columns: ["id", "name", "height"],
@@ -12,13 +12,13 @@ describe("InsertWriter.writeSchemaInserts(schema)", function () {
             }
         ];
 
-        expect(InsertWriter.writeSchemaInserts(schema)).to.equal(
+        expect(InsertWriter.writeTableInserts(tables)).to.equal(
                 "INSERT INTO people (id, name, height) VALUES\n" +
                 "(1, 'George', 2.49);");
     });
 
     it("separates rows with comma and newline", function () {
-        var schema = [
+        var tables = [
             {
                 name: "people",
                 columns: ["id", "name", "height"],
@@ -29,14 +29,14 @@ describe("InsertWriter.writeSchemaInserts(schema)", function () {
             }
         ];
 
-        expect(InsertWriter.writeSchemaInserts(schema)).to.equal(
+        expect(InsertWriter.writeTableInserts(tables)).to.equal(
                 "INSERT INTO people (id, name, height) VALUES\n" +
                 "(1, 'George', 2.49),\n" +
                 "(2, 'John', 5.49);");
     });
 
     it("writes 'undefined' as 'NULL'", function () {
-        var schema = [
+        var tables = [
             {
                 name: "people",
                 columns: ["id", "name", "height"],
@@ -47,14 +47,14 @@ describe("InsertWriter.writeSchemaInserts(schema)", function () {
             }
         ];
 
-        expect(InsertWriter.writeSchemaInserts(schema)).to.equal(
+        expect(InsertWriter.writeTableInserts(tables)).to.equal(
                 "INSERT INTO people (id, name, height) VALUES\n" +
                 "(1, NULL, 2.49),\n" +
                 "(2, 'John', NULL);");
     });
 
     it("separates table inserts with two newline characters", function () {
-        var schema = [
+        var tables = [
             {
                 name: "people",
                 columns: ["id", "name", "height"],
@@ -73,7 +73,7 @@ describe("InsertWriter.writeSchemaInserts(schema)", function () {
             }
         ];
 
-        expect(InsertWriter.writeSchemaInserts(schema)).to.equal(
+        expect(InsertWriter.writeTableInserts(tables)).to.equal(
                 "INSERT INTO people (id, name, height) VALUES\n" +
                 "(1, 'George', 2.49),\n" +
                 "(2, 'John', 5.49);\n\n" + 

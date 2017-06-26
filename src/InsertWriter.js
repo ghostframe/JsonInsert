@@ -1,7 +1,7 @@
 (function () {
 
-    function writeSchemaInserts(schema) {
-        return schema.map(writeTableInsert).join("\n\n");
+    function writeTableInserts(tables) {
+        return tables.map(writeTableInsert).join("\n\n");
     }
 
     function writeTableInsert(table) {
@@ -36,7 +36,7 @@
     }
 
     module.exports = {
-        writeSchemaInserts: writeSchemaInserts
+        writeTableInserts: writeTableInserts
     };
 
 })();
