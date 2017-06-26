@@ -2,24 +2,54 @@ var _ = require("lodash");
 
 (function () {
 
-    var collections = [];
+    var collections;
+    var currentId;
+    
+    function init() {
+        collections = [];
+        currentId = 0;
+    }
+
+    function getNormalizedCollections(collection) {
+        init();
+        collections.push(collection);
+        normalize(collection);
+        return collections;
+    }
 
     function normalize(collection) {
-        collections.push(collection);
         _.forEach(collection.documents, document =>
             _.forEach(embeddedCollectionsIn(document), embeddedCollection => {
                 extract(embeddedCollection, collection.name, document);
                 normalize(embeddedCollection);
             })
         );
-        return collections;
     }
-    
-    function extract(embeddedCollection, collectionName, document) {
+
+    function extract(embeddedCollection, parentCollectionName, document) {
+        if (!document.id) {
+            document.id = generateId();
+        } else {
+            currentId = document.id;
+        }
         _.forEach(embeddedCollection.documents, embeddedDocument => {
-            embeddedDocument["_" + collectionName + "_id"] = document.id;
+            embeddedDocument["_" + parentCollectionName + "_id"] = document.id;
         });
+        pushCollection(embeddedCollection);
         delete document[embeddedCollection.name];
+    }
+
+    function pushCollection(collection) {
+        var existingCollection = collections.find(existingCollection => existingCollection.name === collection.name);
+        if (existingCollection) {
+            existingCollection.documents = existingCollection.documents.concat(collection.documents);
+        } else {
+            collections.push(collection);
+        }
+    }
+
+    function generateId() {
+        return ++currentId;
     }
 
     function embeddedCollectionsIn(object) {
@@ -34,7 +64,7 @@ var _ = require("lodash");
     }
 
     module.exports = {
-        normalize: normalize
+        getNormalizedCollections: getNormalizedCollections
     };
 
 })();
