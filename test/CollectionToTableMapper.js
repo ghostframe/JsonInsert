@@ -4,16 +4,17 @@ var expect = require("chai").expect;
 describe("CollectionToTableMapper", function () {
     describe("getTablesFromCollection", function () {
         it("supports a collection of one object with primitive fields", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49
-                    }
-                ]
-            };
+                        name: "people",
+                        documents: [
+                            {
+                                id: 1,
+                                name: "George",
+                                height: 2.49
+                            }
+                        ]
+                    };
 
             var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
@@ -29,20 +30,21 @@ describe("CollectionToTableMapper", function () {
         });
 
         it("completes objects with missing fields", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49
-                    },
-                    {
-                        name: "John",
-                        height: 10
-                    }
-                ]
-            };
+                        name: "people",
+                        documents: [
+                            {
+                                id: 1,
+                                name: "George",
+                                height: 2.49
+                            },
+                            {
+                                name: "John",
+                                height: 10
+                            }
+                        ]
+                    };
 
             var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
@@ -60,39 +62,40 @@ describe("CollectionToTableMapper", function () {
         });
 
         it("links out embedded collections into new table", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
-                                model: "Mazda"
+                                id: 1,
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             },
                             {
-                                model: "Porsche",
-                                year: 2000
+                                id: 2,
+                                name: "John",
+                                height: 10,
+                                cars: [
+                                    {
+                                        model: "Fiat"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2009
+                                    }
+                                ]
                             }
                         ]
-                    },
-                    {
-                        id: 2,
-                        name: "John",
-                        height: 10,
-                        cars: [
-                            {
-                                model: "Fiat"
-                            },
-                            {
-                                model: "Porsche",
-                                year: 2009
-                            }
-                        ]
-                    }
-                ]
-            };
+                    };
 
             var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
@@ -120,36 +123,37 @@ describe("CollectionToTableMapper", function () {
         });
 
         it("links out embedded collections into new table, generating all ids when not defined", function () {
-            var collection = {
-                name: "people",
-                documents: [{
-                        name: "George",
-                        height: 2.49,
-                        cars: [
-                            {
-                                model: "Mazda"
-                            },
-                            {
-                                model: "Porsche",
-                                year: 2000
-                            }
-                        ]
-                    },
+            var collection =
                     {
-                        name: "John",
-                        height: 10,
-                        cars: [
-                            {
-                                model: "Fiat"
+                        name: "people",
+                        documents: [{
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             },
                             {
-                                model: "Porsche",
-                                year: 2009
+                                name: "John",
+                                height: 10,
+                                cars: [
+                                    {
+                                        model: "Fiat"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2009
+                                    }
+                                ]
                             }
                         ]
-                    }
-                ]
-            };
+                    };
 
             var tables = CollectionToTableMapper.getTablesFromCollection(collection);
             var idOfGeorge = tables[0].rows[0][1];
@@ -180,39 +184,40 @@ describe("CollectionToTableMapper", function () {
         });
 
         it("links out embedded collections into new table, generating an unique id when not defined but others are defined", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
-                                model: "Mazda"
+                                id: 1,
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             },
                             {
-                                model: "Porsche",
-                                year: 2000
+                                id: undefined,
+                                name: "John",
+                                height: 10,
+                                cars: [
+                                    {
+                                        model: "Fiat"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2009
+                                    }
+                                ]
                             }
                         ]
-                    },
-                    {
-                        id: undefined,
-                        name: "John",
-                        height: 10,
-                        cars: [
-                            {
-                                model: "Fiat"
-                            },
-                            {
-                                model: "Porsche",
-                                year: 2009
-                            }
-                        ]
-                    }
-                ]
-            };
+                    };
 
             var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
