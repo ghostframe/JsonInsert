@@ -1,6 +1,5 @@
 var TableProcessor = require("../src/TableProcessor.js");
-var chai = require('chai');
-var expect = chai.expect;
+var expect = require('chai').expect;
 
 describe("TableProcessor", function () {
     describe("snakeCaseifyColumns()", function () {

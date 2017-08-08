@@ -1,6 +1,5 @@
 var InsertWriter = require("../src/InsertWriter.js");
-var chai = require('chai');
-var expect = chai.expect;
+var expect = require('chai').expect;
 
 describe("InsertWriter.writeTableInserts(tables)", function () {
     it("writes tables with one table and one row correctly", function () {
@@ -76,7 +75,7 @@ describe("InsertWriter.writeTableInserts(tables)", function () {
         expect(InsertWriter.writeTableInserts(tables)).to.equal(
                 "INSERT INTO people (id, name, height) VALUES\n" +
                 "(1, 'George', 2.49),\n" +
-                "(2, 'John', 5.49);\n\n" + 
+                "(2, 'John', 5.49);\n\n" +
                 "INSERT INTO cars (id, model, person_id) VALUES\n" +
                 "(1, 'Mazda', 1),\n" +
                 "(2, 'Fiat', 1);");

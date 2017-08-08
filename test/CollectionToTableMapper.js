@@ -1,8 +1,7 @@
-var TableMapper = require("../src/TableMapper.js");
-var chai = require("chai");
-var expect = chai.expect;
+var CollectionToTableMapper = require("../src/CollectionToTableMapper.js");
+var expect = require("chai").expect;
 
-describe("TableMapper", function () {
+describe("CollectionToTableMapper", function () {
     describe("getTablesFromCollection", function () {
         it("supports a collection of one object with primitive fields", function () {
             var collection = {
@@ -16,7 +15,7 @@ describe("TableMapper", function () {
                 ]
             };
 
-            var tables = TableMapper.getTablesFromCollection(collection);
+            var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
             expect(tables).to.deep.equal(
                     [
@@ -45,7 +44,7 @@ describe("TableMapper", function () {
                 ]
             };
 
-            var tables = TableMapper.getTablesFromCollection(collection);
+            var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
             expect(tables).to.deep.equal(
                     [
@@ -95,7 +94,7 @@ describe("TableMapper", function () {
                 ]
             };
 
-            var tables = TableMapper.getTablesFromCollection(collection);
+            var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
             expect(tables).to.deep.equal(
                     [
@@ -152,7 +151,7 @@ describe("TableMapper", function () {
                 ]
             };
 
-            var tables = TableMapper.getTablesFromCollection(collection);
+            var tables = CollectionToTableMapper.getTablesFromCollection(collection);
             var idOfGeorge = tables[0].rows[0][1];
             var idOfJohn = tables[0].rows[1][1];
             expect(idOfGeorge).to.not.be.undefined;
@@ -215,7 +214,7 @@ describe("TableMapper", function () {
                 ]
             };
 
-            var tables = TableMapper.getTablesFromCollection(collection);
+            var tables = CollectionToTableMapper.getTablesFromCollection(collection);
 
             var idOfJohn = tables[0].rows[1][1];
             expect(idOfJohn).not.to.be.undefined;

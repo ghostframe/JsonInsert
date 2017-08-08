@@ -1,6 +1,5 @@
 var CollectionNormalizer = require("../src/CollectionNormalizer.js");
-var chai = require("chai");
-var expect = chai.expect;
+var expect = require("chai").expect;
 
 describe("CollectionNormalizer", function () {
     describe("getNormalizedCollections(collection)", function () {
