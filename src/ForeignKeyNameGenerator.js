@@ -12,10 +12,12 @@ var _ = require("lodash");
             singularize: false
         };
     }
+    
+    function configure(newConfiguration) {
+        _.assign(configuration, newConfiguration);
+    }
 
-    function generateForCollectionNamed(collectionName, configurationProvided) {
-        init();
-        _.assign(configuration, configurationProvided);
+    function generateForCollectionNamed(collectionName) {
         if (configuration.singularize) {
             collectionName = singular(collectionName);
         }
@@ -24,6 +26,7 @@ var _ = require("lodash");
 
     module.exports = {
         generateForCollectionNamed: generateForCollectionNamed,
-        configuration: configuration
+        configure: configure,
+        init: init
     };
 })();

@@ -2,26 +2,36 @@ var ForeignKeyNameGenerator = require("../src/ForeignKeyNameGenerator.js");
 var expect = require("chai").expect;
 
 describe("ForeignKeyNameGenerator", function () {
+    beforeEach(function () {
+        ForeignKeyNameGenerator.init();
+    });
+
     describe("generateForCollectionNamed(collectionName)", function () {
         it("supports prefix", function () {
+            ForeignKeyNameGenerator.configure({prefix: "prefix_"});
             var collectionName = "people";
-            var foreignKeyName = ForeignKeyNameGenerator.generateForCollectionNamed(collectionName, {prefix: "prefix_"});
-            expect(foreignKeyName).to.equal("prefix_people");
+            expect(ForeignKeyNameGenerator.generateForCollectionNamed(collectionName))
+                    .to.equal("prefix_people");
         });
+
         it("supports suffix", function () {
+            ForeignKeyNameGenerator.configure({suffix: "_suffix"});
             var collectionName = "people";
-            var foreignKeyName = ForeignKeyNameGenerator.generateForCollectionNamed(collectionName, {suffix: "_suffix"});
-            expect(foreignKeyName).to.equal("people_suffix");
+            expect(ForeignKeyNameGenerator.generateForCollectionNamed(collectionName))
+                    .to.equal("people_suffix");
         });
+
         it("supports singularization", function () {
+            ForeignKeyNameGenerator.configure({singularize: true});
             var collectionName = "people";
-            var foreignKeyName = ForeignKeyNameGenerator.generateForCollectionNamed(collectionName, {singularize: true});
-            expect(foreignKeyName).to.equal("person");
+            expect(ForeignKeyNameGenerator.generateForCollectionNamed(collectionName))
+                    .to.equal("person");
         });
+
         it("doesn't change string when no configuration is provided", function () {
             var collectionName = "people";
-            var foreignKeyName = ForeignKeyNameGenerator.generateForCollectionNamed(collectionName);
-            expect(foreignKeyName).to.equal("people");
+            expect(ForeignKeyNameGenerator.generateForCollectionNamed(collectionName))
+                    .to.equal("people");
         });
     });
 });
