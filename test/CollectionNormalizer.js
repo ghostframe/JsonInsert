@@ -4,25 +4,26 @@ var expect = require("chai").expect;
 describe("CollectionNormalizer", function () {
     describe("getNormalizedCollections(collection)", function () {
         it("links out embedded collection through document id", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
-                                model: "Mazda"
-                            },
-                            {
-                                model: "Porsche",
-                                year: 2000
+                                id: 1,
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             }
                         ]
-                    }
-                ]
-            };
+                    };
 
             var normalizedCollection = CollectionNormalizer.getNormalizedCollections(collection);
 
@@ -56,24 +57,25 @@ describe("CollectionNormalizer", function () {
                     );
         });
         it("links out embedded collection, generating id when it's missing", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
-                                model: "Mazda"
-                            },
-                            {
-                                model: "Porsche",
-                                year: 2000
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             }
                         ]
-                    }
-                ]
-            };
+                    };
 
             var normalizedCollections = CollectionNormalizer.getNormalizedCollections(collection);
             expect(normalizedCollections).to.deep.equal(
@@ -106,40 +108,41 @@ describe("CollectionNormalizer", function () {
                     );
         });
         it("links out embedded collections through document id's", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
-                                model: "Mazda"
+                                id: 1,
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             },
                             {
-                                model: "Porsche",
-                                year: 2000
+                                id: 2,
+                                name: "John",
+                                height: 1.49,
+                                cars: [
+                                    {
+                                        model: "Fiat",
+                                        year: 2004
+                                    },
+                                    {
+                                        model: "Volskwagen",
+                                        year: 2001
+                                    }
+                                ]
                             }
                         ]
-                    },
-                    {
-                        id: 2,
-                        name: "John",
-                        height: 1.49,
-                        cars: [
-                            {
-                                model: "Fiat",
-                                year: 2004
-                            },
-                            {
-                                model: "Volskwagen",
-                                year: 2001
-                            }
-                        ]
-                    }
-                ]
-            };
+                    };
 
             var normalizedCollections = CollectionNormalizer.getNormalizedCollections(collection);
             var peopleCollection = normalizedCollections.find(
@@ -191,38 +194,39 @@ describe("CollectionNormalizer", function () {
                     );
         });
         it("links out embedded collections, generating unique id's when all are missing", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
-                                model: "Mazda"
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             },
                             {
-                                model: "Porsche",
-                                year: 2000
+                                name: "John",
+                                height: 1.49,
+                                cars: [
+                                    {
+                                        model: "Fiat",
+                                        year: 2004
+                                    },
+                                    {
+                                        model: "Volskwagen",
+                                        year: 2001
+                                    }
+                                ]
                             }
                         ]
-                    },
-                    {
-                        name: "John",
-                        height: 1.49,
-                        cars: [
-                            {
-                                model: "Fiat",
-                                year: 2004
-                            },
-                            {
-                                model: "Volskwagen",
-                                year: 2001
-                            }
-                        ]
-                    }
-                ]
-            };
+                    };
 
             var normalizedCollections = CollectionNormalizer.getNormalizedCollections(collection);
             var peopleCollection = normalizedCollections.find(
@@ -274,50 +278,51 @@ describe("CollectionNormalizer", function () {
                     );
         });
         it("links out embedded collections, generating unique id's when last ones are missing", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
-                                model: "Mazda"
+                                id: 1,
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        model: "Mazda"
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000
+                                    }
+                                ]
                             },
                             {
-                                model: "Porsche",
-                                year: 2000
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        name: "John",
-                        height: 1.49,
-                        cars: [
-                            {
-                                model: "Fiat",
-                                year: 2004
+                                id: 2,
+                                name: "John",
+                                height: 1.49,
+                                cars: [
+                                    {
+                                        model: "Fiat",
+                                        year: 2004
+                                    },
+                                    {
+                                        model: "Volskwagen",
+                                        year: 2001
+                                    }
+                                ]
                             },
                             {
-                                model: "Volskwagen",
-                                year: 2001
+                                name: "James",
+                                height: 1.49,
+                                cars: [
+                                    {
+                                        model: "BMW",
+                                        year: 2007
+                                    }
+                                ]
                             }
                         ]
-                    },
-                    {
-                        name: "James",
-                        height: 1.49,
-                        cars: [
-                            {
-                                model: "BMW",
-                                year: 2007
-                            }
-                        ]
-                    }
-                ]
-            };
+                    };
 
             var normalizedCollections = CollectionNormalizer.getNormalizedCollections(collection);
             var peopleCollection = normalizedCollections.find(
@@ -379,62 +384,63 @@ describe("CollectionNormalizer", function () {
                     );
         });
         it("links out embedded embedded collections", function () {
-            var collection = {
-                name: "people",
-                documents: [
+            var collection =
                     {
-                        id: 1,
-                        name: "George",
-                        height: 2.49,
-                        cars: [
+                        name: "people",
+                        documents: [
                             {
                                 id: 1,
-                                model: "Mazda",
-                                sponsors: [
-                                    {brand: "MOMO"},
-                                    {brand: "Yokohama"}
+                                name: "George",
+                                height: 2.49,
+                                cars: [
+                                    {
+                                        id: 1,
+                                        model: "Mazda",
+                                        sponsors: [
+                                            {brand: "MOMO"},
+                                            {brand: "Yokohama"}
+                                        ]
+                                    },
+                                    {
+                                        model: "Porsche",
+                                        year: 2000,
+                                        sponsors: [
+                                            {brand: "Toyo"}
+                                        ]
+                                    }
                                 ]
                             },
                             {
-                                model: "Porsche",
-                                year: 2000,
-                                sponsors: [
-                                    {brand: "Toyo"}
+                                id: 2,
+                                name: "John",
+                                height: 1.49,
+                                cars: [
+                                    {
+                                        model: "Fiat",
+                                        year: 2004
+                                    },
+                                    {
+                                        model: "Volskwagen",
+                                        year: 2001,
+                                        sponsors: [
+                                            {brand: "HHCL"}
+                                        ]
+                                    }
                                 ]
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        name: "John",
-                        height: 1.49,
-                        cars: [
-                            {
-                                model: "Fiat",
-                                year: 2004
                             },
                             {
-                                model: "Volskwagen",
-                                year: 2001,
-                                sponsors: [
-                                    {brand: "HHCL"}
+                                id: 3,
+                                name: "James",
+                                height: 1.49,
+                                cars: [
+                                    {
+                                        model: "BMW",
+                                        year: 2007
+                                    }
                                 ]
                             }
                         ]
-                    },
-                    {
-                        id: 3,
-                        name: "James",
-                        height: 1.49,
-                        cars: [
-                            {
-                                model: "BMW",
-                                year: 2007
-                            }
-                        ]
-                    }
-                ]
-            };
+                    };
 
             var normalizedCollections = CollectionNormalizer.getNormalizedCollections(collection);
             var peopleCollection = normalizedCollections.find(
