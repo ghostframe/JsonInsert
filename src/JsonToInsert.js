@@ -14,7 +14,7 @@ var lodash = require("lodash");
     }
     
     function writeInserts(tables) {
-        return tables.map(InsertWriter.writeTableInserts).join(";\n\n");
+        return tables.map(InsertWriter.writeTableInserts).join("\n\n");
     }
     
     module.exports = {

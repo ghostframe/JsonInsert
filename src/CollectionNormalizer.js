@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var ForeignKeyNameGenerator = require("../src/ForeignKeyNameGenerator.js");
 
 (function () {
 
@@ -33,10 +34,14 @@ var _ = require("lodash");
             currentId = document.id;
         }
         _.forEach(embeddedCollection.documents, embeddedDocument => {
-            embeddedDocument["_" + parentCollectionName + "_id"] = document.id;
+            embeddedDocument[generateForeignKeyName(parentCollectionName)] = document.id;
         });
         pushCollection(embeddedCollection);
         delete document[embeddedCollection.name];
+    }
+    
+    function generateForeignKeyName(parentCollectionName) {
+        return ForeignKeyNameGenerator.generateForCollectionNamed(parentCollectionName);
     }
 
     function pushCollection(collection) {

@@ -44,12 +44,12 @@ describe("CollectionNormalizer", function () {
                             documents: [
                                 {
                                     model: "Mazda",
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Porsche",
                                     year: 2000,
-                                    _people_id: 1
+                                    person_id: 1
                                 }
                             ]
                         }
@@ -95,12 +95,12 @@ describe("CollectionNormalizer", function () {
                             documents: [
                                 {
                                     model: "Mazda",
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Porsche",
                                     year: 2000,
-                                    _people_id: 1
+                                    person_id: 1
                                 }
                             ]
                         }
@@ -171,22 +171,22 @@ describe("CollectionNormalizer", function () {
                             documents: [
                                 {
                                     model: "Mazda",
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Porsche",
                                     year: 2000,
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Fiat",
                                     year: 2004,
-                                    _people_id: 2
+                                    person_id: 2
                                 },
                                 {
                                     model: "Volskwagen",
                                     year: 2001,
-                                    _people_id: 2
+                                    person_id: 2
                                 }
                             ]
                         }
@@ -255,22 +255,22 @@ describe("CollectionNormalizer", function () {
                             documents: [
                                 {
                                     model: "Mazda",
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Porsche",
                                     year: 2000,
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Fiat",
                                     year: 2004,
-                                    _people_id: 2
+                                    person_id: 2
                                 },
                                 {
                                     model: "Volskwagen",
                                     year: 2001,
-                                    _people_id: 2
+                                    person_id: 2
                                 }
                             ]
                         }
@@ -356,27 +356,27 @@ describe("CollectionNormalizer", function () {
                             documents: [
                                 {
                                     model: "Mazda",
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Porsche",
                                     year: 2000,
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Fiat",
                                     year: 2004,
-                                    _people_id: 2
+                                    person_id: 2
                                 },
                                 {
                                     model: "Volskwagen",
                                     year: 2001,
-                                    _people_id: 2
+                                    person_id: 2
                                 },
                                 {
                                     model: "BMW",
                                     year: 2007,
-                                    _people_id: 3
+                                    person_id: 3
                                 }
                             ]
                         }
@@ -475,29 +475,29 @@ describe("CollectionNormalizer", function () {
                                 {
                                     id: 1,
                                     model: "Mazda",
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     id: 2,
                                     model: "Porsche",
                                     year: 2000,
-                                    _people_id: 1
+                                    person_id: 1
                                 },
                                 {
                                     model: "Fiat",
                                     year: 2004,
-                                    _people_id: 2
+                                    person_id: 2
                                 },
                                 {
                                     id: 3,
                                     model: "Volskwagen",
                                     year: 2001,
-                                    _people_id: 2
+                                    person_id: 2
                                 },
                                 {
                                     model: "BMW",
                                     year: 2007,
-                                    _people_id: 3
+                                    person_id: 3
                                 }
                             ]
                         },
@@ -506,19 +506,19 @@ describe("CollectionNormalizer", function () {
                             documents: [
                                 {
                                     brand: "MOMO",
-                                    _cars_id: 1
+                                    car_id: 1
                                 },
                                 {
                                     brand: "Yokohama",
-                                    _cars_id: 1
+                                    car_id: 1
                                 },
                                 {
                                     brand: "Toyo",
-                                    _cars_id: 2
+                                    car_id: 2
                                 },
                                 {
                                     brand: "HHCL",
-                                    _cars_id: 3
+                                    car_id: 3
                                 }
                             ]
                         }
